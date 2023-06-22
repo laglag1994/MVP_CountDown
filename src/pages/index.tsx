@@ -1,31 +1,33 @@
 import Image from 'next/image'
-import MVPcard, { MvpCard } from "../../components/MVPcard"
+import MVPcard from "../../components/MVPcard"
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { useState } from 'react';
 
+
+
+export type mvpTypes = {
+  name: string;
+  respawnTime: Date
+  isAlive: Boolean
+  img: String
+
+
+}
 
 export default function Home() {
 
-  const cards: MvpCard[] = [
-    {
-      name: 'Eddga',
-      img: '/eddga.png',
-      time: '10:00',
-    },
-    {
-      name: 'Maya',
-      img: '/maya.png',
-      time: '12:30',
-    },
-    {
-      name: 'drake',
-      img: '/drake.png',
-      time: '10:00',
-    },
-    {
-      name: 'Maya',
-      img: '/maya.png',
-      time: '12:30',
-    },
-  ];
+  const { isLoading, error, data } = useQuery('repoData', () =>
+    fetch('http://localhost:3000/api/mvp').then(res => res.json()
+    )
+  )
+
+
+  if (isLoading) return 'Loading...'
+
+  if (error) return 'An error has occurred: ' + error
+
+
+
 
   return (
 
@@ -40,7 +42,7 @@ export default function Home() {
       </div>
 
       <div className='px-20'>
-        <MVPcard cards={cards} />
+        <MVPcard cards={data} />
       </div>
     </div>
   )

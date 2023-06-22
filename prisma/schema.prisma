@@ -12,6 +12,6 @@ model Mvp {
   name         String
   lastKillTime DateTime @default(now())
   respawnTime  DateTime
-  mvpStatus    Boolean
+  isAlive      Boolean  @default(true)
   img          String?
 }
