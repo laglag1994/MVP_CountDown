@@ -21,6 +21,20 @@ export default function Home() {
     )
   )
 
+  const editMvp = async () => {
+    try {
+      await fetch("http://localhost:3000/api/mvp", {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id:data.id, ...data })
+      });
+    } catch (err: any) {
+      alert("There is an error");
+      console.log(err);
+    }
+  };
+
+
 
   if (isLoading) return 'Loading...'
 

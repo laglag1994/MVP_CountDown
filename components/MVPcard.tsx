@@ -15,6 +15,10 @@ interface MvpProps {
 
 const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
+    const killMvp = (id:number) => {
+
+    }
+
     console.log(cards)
     return (
         <div className="flex justify-center items-center gap-10 flex-wrap ">
