@@ -32,6 +32,9 @@ export default function Home() {
     <div className='flex flex-col justify-start items-center gap-10 bg-[#2C3639] h-screen'>
 
       <div className='flex justify-center items-center gap-2 bg-[#3F4E4F] w-full'>
+        <img
+          className='-translate-x-96 '
+          src="/PRM.png" alt="" height={80} width={80} />
         <img src="/mvp2.png" alt="" height={100} width={100} />
         <h1 className='text-4xl text-white'>Timer</h1>
       </div>
