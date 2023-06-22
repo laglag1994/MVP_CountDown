@@ -1,3 +1,4 @@
+import { useState } from "react"
 
 
 
@@ -14,12 +15,16 @@ interface MvpProps {
 
 
 const MVPcard: React.FC<MvpProps> = ({ cards }) => {
+    
+    const [updatedCards, setUpdatedCards] = useState<MvpCard[]>(cards);
 
-    const killMvp = (id:number) => {
+    const killMvp = (index: number) => {
+        const isDead = [...updatedCards];
+        isDead[index].isAlive = false;
+        setUpdatedCards(isDead);
+    };
 
-    }
-
-    console.log(cards)
+    console.log(updatedCards)
     return (
         <div className="flex justify-center items-center gap-10 flex-wrap ">
             {cards.map((card, index) => (
@@ -32,7 +37,10 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                         src={card.img} alt="" height="100px" /></span>
                     <span>{card.isAlive ? "alive" : "dead"}</span>
                     <span>{card.respawnTime}</span>
-                    <button className="bg-red-700 w-full text-white py-1">killed</button>
+                    <button
+                        onClick={() => killMvp(index)}
+
+                        className="bg-red-700 w-full text-white py-1">killed</button>
                     <button className="bg-[#A27B5C] w-full text-white py-1">edit</button>
                 </div>
             ))}
