@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-height {
+    height: 100px; /* or any specific value you want */
+}
