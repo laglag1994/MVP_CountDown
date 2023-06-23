@@ -20,14 +20,7 @@ export default function Home() {
     fetch('http://localhost:3000/api/mvp').then(res => res.json()
     )
   )
-
-
-
-
-
-
-
-
+  
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error
