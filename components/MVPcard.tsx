@@ -7,12 +7,24 @@ import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient
 export type MvpCard = {
     name: string
     img?: string
-    respawnTime?: Date
+    respawnTime: number
+    lastKillTime?: Date
     isAlive: boolean
 }
 
 interface MvpProps {
     cards: MvpCard[]
+}
+
+const updateMvpInfo = async ({ mvpId, lastKillTime, alive }: { mvpId: number, lastKillTime: Date, alive: boolean }) => {
+    const updatedData = await fetch("http://localhost:3000/api/mvp", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: mvpId, isAlive: alive, respawnTime: lastKillTime }),
+    });
+    return updatedData.json();
 }
 
 
@@ -22,22 +34,8 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
     const queryClient = useQueryClient()
 
-    const {
-        isLoading,
-        error,
-        data,
-        mutateAsync,
-    } = useMutation(
-        "updateMvp", async ({ mvpId, respTime, alive }: { mvpId: number, respTime: Date, alive: boolean }) => {
-            const updatedData = await fetch("http://localhost:3000/api/mvp", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: mvpId, isAlive: alive, respawnTime: respTime }),
-            });
-            return updatedData.json();
-        }
+    const { isLoading, error, data, mutateAsync, } = useMutation(
+        "updateMvp", updateMvpInfo
     );
 
     console.log(data, "data")
@@ -45,14 +43,14 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     const handleMvpUpdate = async (id: number) => {
         const currentMvp = cards[id];
         const currentTime = new Date();
-        const respawnTime = new Date(currentTime.getTime() + 90 * 60000); // Add 90 minutes (90 minutes * 60 seconds * 1000 milliseconds)
+        // const respawnTime = new Date(currentTime.getTime() + 90 * 60000); // Add 90 minutes (90 minutes * 60 seconds * 1000 milliseconds)
 
         if (currentMvp.isAlive) {
             const alive = false;
             const res = await mutateAsync({
                 mvpId: id,
                 alive,
-                respTime: respawnTime,
+                lastKillTime: currentTime,
             });
             queryClient.invalidateQueries(["mvplist"]);
             // console.log(res, "res")
@@ -86,13 +84,13 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     }, []);
 
     const countountdown = () => {
-        const currentTime = new Date();
         cards.forEach((card, index) => {
-            if (card.respawnTime) {
-                const newRespTime = new Date(card.respawnTime);
-                const different = newRespTime.getTime() - currentTime.getTime();
+            if (!card.isAlive && card.lastKillTime) {
+                const lastKill = new Date(card.lastKillTime);
+                const respTime = new Date(lastKill.getTime() + card.respawnTime)
+                // const different = lastKill.getTime() - respTime.getTime();
 
-
+                const different = respTime.getTime() - new Date().getTime()
 
                 const hours = Math.floor(different / (1000 * 3600)) % 24;
                 const mins = Math.floor(different / (1000 * 60)) % 60;

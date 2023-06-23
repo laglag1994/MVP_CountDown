@@ -11,7 +11,7 @@ model Mvp {
   id           Int      @id @default(autoincrement())
   name         String
   lastKillTime DateTime @default(now())
-  respawnTime  DateTime
+  respawnTime  Int
   isAlive      Boolean  @default(true)
   img          String?
 }

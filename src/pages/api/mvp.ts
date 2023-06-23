@@ -13,6 +13,7 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
 
       res.status(200).json(mvps);
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: 'Failed to fetch MVPs' });
     }
 
@@ -23,6 +24,7 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
 
       res.status(201).json(newMvp);
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: 'Failed to create MVP' });
     }
 
@@ -35,7 +37,7 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
           id: req.body.id
         },
         data: {
-          respawnTime: req.body.respawnTime,
+          lastKillTime: req.body.lastKillTime,
           isAlive: req.body.isAlive
         }
       })
