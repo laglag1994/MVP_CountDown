@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import MVPcard from "../../components/MVPcard"
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { QueryClient, QueryClientProvider, useMutation, useQuery } from 'react-query'
 import { useState } from 'react';
 
 
@@ -16,23 +16,15 @@ export type mvpTypes = {
 
 export default function Home() {
 
-  const { isLoading, error, data } = useQuery('repoData', () =>
+  const { isLoading, error, data } = useQuery('mvplist', () =>
     fetch('http://localhost:3000/api/mvp').then(res => res.json()
     )
   )
 
-  const editMvp = async () => {
-    try {
-      await fetch("http://localhost:3000/api/mvp", {
-        method: 'PUT',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id:data.id, ...data })
-      });
-    } catch (err: any) {
-      alert("There is an error");
-      console.log(err);
-    }
-  };
+
+
+
+
 
 
 
@@ -41,7 +33,7 @@ export default function Home() {
   if (error) return 'An error has occurred: ' + error
 
 
-
+ 
 
   return (
 

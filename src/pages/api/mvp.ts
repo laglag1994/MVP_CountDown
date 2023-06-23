@@ -31,9 +31,12 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
   } else if (req.method === 'PUT') {
     try {
       const updateMvp = await prisma.mvp.update({
-        data: req.body,
         where: {
           id: req.body.id
+        },
+        data: {
+          respawnTime: req.body.respawnTime,
+          isAlive: req.body.isAlive
         }
       })
       res.status(201).json(updateMvp);
@@ -44,4 +47,4 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
   } else {
     res.status(405).json({ message: 'Method Not Allowed' });
   }
-}
+}     
