@@ -16,9 +16,6 @@ interface MvpProps {
 }
 
 
-
-
-
 const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
 
@@ -43,6 +40,8 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         }
     );
 
+    console.log(data, "data")
+
     const handleMvpUpdate = async (id: number) => {
         const currentMvp = cards[id];
         const currentTime = new Date();
@@ -56,10 +55,10 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                 respTime: respawnTime,
             });
             queryClient.invalidateQueries(["mvplist"]);
+            // console.log(res, "res")
+
         }
     };
-
-
 
 
 
@@ -68,7 +67,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     if (error) return <div>An error has occurred</div>;
 
 
-    console.log(data)
+
 
     const [countdown, setCountdown] = useState<{ hours: number; mins: number; sec: number }>({
         hours: 0,
@@ -99,8 +98,6 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                 const mins = Math.floor(different / (1000 * 60)) % 60;
                 const sec = Math.floor(different / 1000) % 60;
 
-
-
                 if (index === 0) {
                     setCountdown({ hours, mins, sec });
                     card.isAlive = true
@@ -116,6 +113,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         <div className="flex justify-center items-center gap-10 flex-wrap ">
             {
                 cards.map((card, index) => {
+                    // console.log(cards, "cards")
                     // const shortTime = card.respawnTime ? new Date(card.respawnTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: "2-digit" }) : '';
                     return (
                         <div key={index} className="flex flex-col justify-center items-center border-2 bg-[#DCD7C9] border-[#A27B5C] w-[200px]">
