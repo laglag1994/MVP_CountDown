@@ -18,15 +18,15 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
     }
 
 
-  } else if (req.method === 'POST') {
-    try {
-      const newMvp = await prisma.mvp.create({ data: req.body });
+  // } else if (req.method === 'POST') {
+  //   try {
+  //     const newMvp = await prisma.mvp.create({ data: req.body });
 
-      res.status(201).json(newMvp);
-    } catch (error) {
-      console.log(error)
-      res.status(500).json({ error: 'Failed to create MVP' });
-    }
+  //     res.status(201).json(newMvp);
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.status(500).json({ error: 'Failed to create MVP' });
+  //   }
 
 
 
@@ -38,12 +38,14 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
         },
         data: {
           lastKillTime: req.body.lastKillTime,
-          isAlive: req.body.isAlive
+          isAlive: req.body.isAlive,
+          respawnTime: req.body.respawnTime  
         }
       })
       res.status(201).json(updateMvp);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update MVP' });
+      console.log(error)
     }
 
   } else {
