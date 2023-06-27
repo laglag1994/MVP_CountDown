@@ -74,7 +74,10 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
  
     };
 
-    console.log(data)
+
+
+
+    console.log(data, "data")
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>An error has occurred</div>;
