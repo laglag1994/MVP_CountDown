@@ -56,20 +56,25 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
         if (!currentMvp) return
         const currentTime = new Date()
-        
+
         const lastKillTime = new Date(currentMvp.lastKillTime);
         const difference = currentMvp.respawnTime + (lastKillTime.getTime() / 1000);
+        const differenceDate = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+
+        const resp=currentMvp.respawnTime
+
         if (currentMvp.isAlive) {
             const alive = !currentMvp.isAlive; 
             const res = await mutateAsync({
                 mvpId: id,
                 alive: alive,
                 lastKillTime: currentTime,
-                respawnTime: Math.floor(difference),
+                respawnTime: resp,
             });
             queryClient.invalidateQueries(["mvplist"]);
 
-            console.log(res, "res")
+            console.log(differenceDate, "res")
         } else {
             alert(currentMvp.name + " is dead")
         }
@@ -78,7 +83,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     };
 
 
-    console.log(data, "data")
+    // console.log(data, "data")
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>An error has occurred</div>;
