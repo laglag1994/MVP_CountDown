@@ -75,8 +75,6 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     };
 
 
-
-
     console.log(data, "data")
 
     if (isLoading) return <div>Loading...</div>;
