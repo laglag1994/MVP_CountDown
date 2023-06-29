@@ -59,7 +59,8 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
         const lastKillTime = new Date(currentMvp.lastKillTime);
         const difference = currentMvp.respawnTime * 1000 + lastKillTime.getTime();
-        const differenceDate = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const differenceDate = new Date(difference).toLocaleTimeString([],
+            { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
         const resp = currentMvp.respawnTime
 
@@ -72,6 +73,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                 respawnTime: resp,
             });
             queryClient.invalidateQueries(["mvplist"]);
+            console.log(res, "results")
 
         } else {
             alert(currentMvp.name + " is dead")
@@ -80,7 +82,25 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         console.log(differenceDate, "respawn")
         console.log(currentTime, "lastkilltime")
 
+
     };
+
+
+    cards.forEach((card) => {
+        const currentTime = new Date();
+        const lastKillTime = new Date(card.lastKillTime);
+        const deadToAlive = card.respawnTime * 1000 + lastKillTime.getTime() === currentTime.getTime();
+
+        if (deadToAlive && !card.isAlive) {
+            mutateAsync({
+                mvpId: card.id,
+                alive: true,
+                lastKillTime: card.lastKillTime,
+                respawnTime: card.respawnTime
+            });
+            queryClient.invalidateQueries(["mvplist"]);
+        }
+    });
 
 
     // console.log(data, "data")
@@ -95,7 +115,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
                 const difference = card.respawnTime * 1000 + lastKillTime.getTime();
                 const differenceDate = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        
+
                 return (
                     <div key={index} className="flex flex-col justify-center items-center border-2 bg-[#DCD7C9] border-[#A27B5C] w-[200px]">
                         <span>{card.name}</span>
