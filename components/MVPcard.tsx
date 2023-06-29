@@ -58,14 +58,13 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         const currentTime = new Date()
 
         const lastKillTime = new Date(currentMvp.lastKillTime);
-        const difference = currentMvp.respawnTime + (lastKillTime.getTime() / 1000);
+        const difference = currentMvp.respawnTime * 1000 + lastKillTime.getTime();
         const differenceDate = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-
-        const resp=currentMvp.respawnTime
+        const resp = currentMvp.respawnTime
 
         if (currentMvp.isAlive) {
-            const alive = !currentMvp.isAlive; 
+            const alive = !currentMvp.isAlive;
             const res = await mutateAsync({
                 mvpId: id,
                 alive: alive,
@@ -74,11 +73,12 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
             });
             queryClient.invalidateQueries(["mvplist"]);
 
-            console.log(differenceDate, "res")
         } else {
             alert(currentMvp.name + " is dead")
         }
 
+        console.log(differenceDate, "respawn")
+        console.log(currentTime, "lastkilltime")
 
     };
 
@@ -92,10 +92,10 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         <div className="flex justify-center items-center gap-10 flex-wrap">
             {cards.map((card, index) => {
                 const lastKillTime = new Date(card.lastKillTime);
-                
-                const difference = card.respawnTime + (lastKillTime.getTime() / 1000);
-                const differenceDate = new Date(difference * 1000).toISOString().substr(11, 8);
 
+                const difference = card.respawnTime * 1000 + lastKillTime.getTime();
+                const differenceDate = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        
                 return (
                     <div key={index} className="flex flex-col justify-center items-center border-2 bg-[#DCD7C9] border-[#A27B5C] w-[200px]">
                         <span>{card.name}</span>
@@ -120,14 +120,3 @@ export default MVPcard;
 
 
 
-// else if (currentMvp.respawnTime === currentTime) {
-//             const alive = true
-//             const res = await mutateAsync({
-//                 mvpId: id,
-//                 alive,
-//                 lastKillTime: currentTime,
-//                 respawnTime: difference,
-//             });
-//             queryClient.invalidateQueries(["mvplist"]);
-
-//             console.log(difference)
