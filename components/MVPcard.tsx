@@ -56,10 +56,11 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
         if (!currentMvp) return
         const currentTime = new Date()
+        
         const lastKillTime = new Date(currentMvp.lastKillTime);
         const difference = currentMvp.respawnTime + (lastKillTime.getTime() / 1000);
         if (currentMvp.isAlive) {
-            const alive = false;
+            const alive = !currentMvp.isAlive; 
             const res = await mutateAsync({
                 mvpId: id,
                 alive: alive,
@@ -86,6 +87,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         <div className="flex justify-center items-center gap-10 flex-wrap">
             {cards.map((card, index) => {
                 const lastKillTime = new Date(card.lastKillTime);
+                
                 const difference = card.respawnTime + (lastKillTime.getTime() / 1000);
                 const differenceDate = new Date(difference * 1000).toISOString().substr(11, 8);
 
