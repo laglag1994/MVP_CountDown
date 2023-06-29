@@ -92,6 +92,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         const deadToAlive = card.respawnTime * 1000 + lastKillTime.getTime() === currentTime.getTime();
 
         if (deadToAlive && !card.isAlive) {
+            
             mutateAsync({
                 mvpId: card.id,
                 alive: true,
