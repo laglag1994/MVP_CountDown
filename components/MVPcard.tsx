@@ -123,12 +123,12 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                         <span>
                             <img className="custom-height" src={card.img} alt="" height="100px" />
                         </span>
-                        <span className={`${card.isAlive ? 'text-green-700' : 'text-red-700'}`}>
+                        <span className={`${card.isAlive ? 'text-green-700' : 'text-red-700'} capitalize`}>
                             {card.isAlive ? 'alive' : `last killing: ${TimeDifference}`}
                         </span>
 
-                        <button onClick={() => handleMvpUpdate(card.id)} className="bg-red-700 w-full text-white py-1">KILL</button>
-                        <button className="bg-[#A27B5C] w-full text-white py-1">edit</button>
+                        <button onClick={() => handleMvpUpdate(card.id)} className="bg-red-700 w-full text-white py-1 capitalize">kill</button>
+                        <button className="bg-[#A27B5C] w-full text-white py-1 capitalize">edit</button>
                     </div>
                 );
             })}
