@@ -25,7 +25,7 @@ const updateMvpInfo = async ({
     alive: boolean,
     respawnTime: number
 }) => {
-    const updatedData = await fetch("http://localhost:3000/api/mvp", {
+    const updatedData = await fetch("/api/mvp", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
