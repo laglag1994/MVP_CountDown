@@ -59,7 +59,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
         const lastKillTime = new Date(currentMvp.lastKillTime);
         const difference = currentMvp.respawnTime * 1000 + lastKillTime.getTime();
-        const differenceDate = new Date(difference).toLocaleTimeString([],
+        const TimeDifference = new Date(difference).toLocaleTimeString([],
             { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
         const resp = currentMvp.respawnTime
@@ -79,7 +79,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
             alert(currentMvp.name + " is dead")
         }
 
-        console.log(differenceDate, "respawn")
+        console.log(TimeDifference, "respawn")
         console.log(currentTime, "lastkilltime")
 
 
@@ -92,7 +92,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         const deadToAlive = card.respawnTime * 1000 + lastKillTime.getTime() <= currentTime.getTime();
 
         if (deadToAlive && !card.isAlive) {
-            
+
             mutateAsync({
                 mvpId: card.id,
                 alive: true,
@@ -115,7 +115,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                 const lastKillTime = new Date(card.lastKillTime);
 
                 const difference = card.respawnTime * 1000 + lastKillTime.getTime();
-                const differenceDate = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const TimeDifference = new Date(difference).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
                 return (
                     <div key={index} className="flex flex-col justify-center items-center border-2 bg-[#DCD7C9] border-[#A27B5C] w-[200px]">
@@ -127,7 +127,10 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                             {card.isAlive ? 'alive' : 'dead'}
                         </span>
 
-                        <span className="text-sm">{`last killing: ${differenceDate}`}</span>
+                        <span className="text-sm">
+                            {card.isAlive === false ? `last killing: ${TimeDifference}` : ""}
+                            {/* {`last killing: ${TimeDifference}`} */}
+                        </span>
                         <button onClick={() => handleMvpUpdate(card.id)} className="bg-red-700 w-full text-white py-1">KILL</button>
                         <button className="bg-[#A27B5C] w-full text-white py-1">edit</button>
                     </div>
