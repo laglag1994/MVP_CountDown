@@ -89,7 +89,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     cards.forEach((card) => {
         const currentTime = new Date();
         const lastKillTime = new Date(card.lastKillTime);
-        const deadToAlive = card.respawnTime * 1000 + lastKillTime.getTime() === currentTime.getTime();
+        const deadToAlive = card.respawnTime * 1000 + lastKillTime.getTime() <= currentTime.getTime();
 
         if (deadToAlive && !card.isAlive) {
             
@@ -127,8 +127,8 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                             {card.isAlive ? 'alive' : 'dead'}
                         </span>
 
-                        <span>{differenceDate}</span>
-                        <button onClick={() => handleMvpUpdate(card.id)} className="bg-red-700 w-full text-white py-1">killed</button>
+                        <span className="text-sm">{`last killing: ${differenceDate}`}</span>
+                        <button onClick={() => handleMvpUpdate(card.id)} className="bg-red-700 w-full text-white py-1">KILL</button>
                         <button className="bg-[#A27B5C] w-full text-white py-1">edit</button>
                     </div>
                 );
