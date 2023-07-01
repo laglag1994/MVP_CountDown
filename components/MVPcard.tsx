@@ -124,13 +124,9 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                             <img className="custom-height" src={card.img} alt="" height="100px" />
                         </span>
                         <span className={`${card.isAlive ? 'text-green-700' : 'text-red-700'}`}>
-                            {card.isAlive ? 'alive' : 'dead'}
+                            {card.isAlive ? 'alive' : `last killing: ${TimeDifference}`}
                         </span>
 
-                        <span className="text-sm">
-                            {card.isAlive === false ? `last killing: ${TimeDifference}` : ""}
-                            {/* {`last killing: ${TimeDifference}`} */}
-                        </span>
                         <button onClick={() => handleMvpUpdate(card.id)} className="bg-red-700 w-full text-white py-1">KILL</button>
                         <button className="bg-[#A27B5C] w-full text-white py-1">edit</button>
                     </div>
