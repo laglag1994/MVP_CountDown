@@ -39,7 +39,7 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
         data: {
           lastKillTime: req.body.lastKillTime,
           isAlive: req.body.isAlive,
-          respawnTime: req.body.respawnTime  
+          respawnTime: req.body.respawnTime
         }
       })
       res.status(201).json(updateMvp);
@@ -48,6 +48,22 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
       console.log(error)
     }
 
+  } else if (req.method === 'DELETE') {
+
+    try {
+      
+      const deleteMvp = await prisma.mvp.delete({
+        where: {
+          id: req.params.id
+        }
+      });
+      res.status(200).json(deleteMvp);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Failed to delete MVP' });
+    }
+
+    
   } else {
     res.status(405).json({ message: 'Method Not Allowed' });
   }
