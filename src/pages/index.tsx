@@ -14,6 +14,8 @@ export type mvpTypes = {
 
 }
 
+
+
 export default function Home() {
 
   const { isLoading, error, data } = useQuery('mvplist', () =>
