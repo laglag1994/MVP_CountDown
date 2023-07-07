@@ -5,15 +5,6 @@ import { useState } from 'react';
 
 
 
-export type mvpTypes = {
-  name: string;
-  respawnTime: Date
-  isAlive: Boolean
-  img: String
-
-
-}
-
 
 
 export default function Home() {
@@ -43,6 +34,7 @@ export default function Home() {
       </div>
 
       <div className='px-20'>
+        <h1 className='text-white py-5'>The MVPs usually respawn in 2 hours and 30 minutes.</h1>
         <MVPcard cards={data} />
       </div>
     </div>
