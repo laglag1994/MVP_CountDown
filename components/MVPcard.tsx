@@ -10,6 +10,7 @@ export type MvpCard = {
     respawnTime: number;
     lastKillTime: Date;
     isAlive: boolean;
+    killerName: string
 };
 
 interface MvpProps {
@@ -20,10 +21,12 @@ const updateMvpInfo = async ({
     mvpId,
     lastKillTime,
     alive,
+    killerName
 }: {
     mvpId: number,
     lastKillTime: Date,
     alive: boolean,
+    killerName: string
 }) => {
     const updatedData = await fetch("/api/mvp", {
         method: "PUT",
@@ -33,7 +36,8 @@ const updateMvpInfo = async ({
         body: JSON.stringify({
             id: mvpId,
             isAlive: alive,
-            lastKillTime: lastKillTime
+            lastKillTime: lastKillTime,
+            killerName: killerName
         }),
     });
     return updatedData.json();
@@ -50,41 +54,56 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     );
 
     const [showModal, setShowModal] = useState(false)
+    const [newKillerName, setNewKillerName] = useState("");
+
+
+    const [isModalSubmitted, setIsModalSubmitted] = useState(false);
+
+
 
     const handleMvpUpdate = async (id: number) => {
-        const currentMvp = cards.find((card) => card.id === id)
-        console.log(currentMvp)
 
-        if (!currentMvp) return
+        if (!isModalSubmitted) {
 
-        const currentTime = new Date();
-        const lastKillTime = currentTime; // Set lastKillTime to the current time
+            console.log(isModalSubmitted, "submitted")
+            const currentMvp = cards.find((card) => card.id === id)
+            console.log(currentMvp)
 
-        const difference = currentMvp.respawnTime + lastKillTime.getTime();
-        const TimeDifference = new Date(difference).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
+            if (!currentMvp) return
 
+            const currentTime = new Date();
+            const lastKillTime = currentTime; // Set lastKillTime to the current time
 
-        if (currentMvp.isAlive) {
-            const alive = !currentMvp.isAlive;
-            const res = await mutateAsync({
-                mvpId: id,
-                alive: alive,
-                lastKillTime: lastKillTime,
+            const difference = currentMvp.respawnTime + lastKillTime.getTime();
+            const TimeDifference = new Date(difference).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
             });
-            queryClient.invalidateQueries(["mvplist"]);
-            console.log(res, "results")
+
+
+            if (currentMvp.isAlive) {
+                const alive = !currentMvp.isAlive;
+                const res = await mutateAsync({
+                    mvpId: id,
+                    alive: alive,
+                    lastKillTime: lastKillTime,
+                    killerName: newKillerName, // Use the killerName state variable
+                });
+                queryClient.invalidateQueries(["mvplist"]);
+                console.log(res, "results")
+
+            } else {
+                alert(currentMvp.name + " is dead")
+            }
+
+            console.log(TimeDifference, "respawn")
+            console.log(lastKillTime, "lastkilltime")
+            console.log(currentTime, "now")
 
         } else {
-            alert(currentMvp.name + " is dead")
+            console.log("nothing submitted", isModalSubmitted)
         }
-
-        console.log(TimeDifference, "respawn")
-        console.log(lastKillTime, "lastkilltime")
-        console.log(currentTime, "now")
 
 
     };
@@ -93,7 +112,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
     cards.forEach((card) => {
         const currentTime = new Date();
         const lastKillTime = new Date(card.lastKillTime);
-        const deadToAlive = card.respawnTime * 1000 + lastKillTime.getTime() <= currentTime.getTime();
+        const deadToAlive = card.respawnTime + lastKillTime.getTime() <= currentTime.getTime();
 
         if (deadToAlive && !card.isAlive) {
 
@@ -101,13 +120,14 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                 mvpId: card.id,
                 alive: true,
                 lastKillTime: card.lastKillTime,
+                killerName: card.killerName
             });
             queryClient.invalidateQueries(["mvplist"]);
         }
     });
 
 
-    // console.log(data, "data")
+
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>An error has occurred</div>;
@@ -131,29 +151,50 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
                 return (
                     <div key={index} className="flex flex-col justify-center items-center border-2 bg-[#DCD7C9] border-[#A27B5C] w-[200px]">
-                        <span>{card.name}</span>
-                        <span>
-                            <img className="custom-height" src={card.img} alt="" height="100px" />
-                        </span>
 
-                        <span className={`${card.isAlive ? 'text-green-700' : 'text-red-700'} capitalize`}>
-                            {card.isAlive ? 'alive' : `last killing: ${lastKillFormat}`}
-                        </span>
+                        <span className="pt-4">{card.name}</span>
 
-                        <span className={`capitalize`}>
-                            {card.isAlive ? '' : `respawns: ${TimeDifference}`}
-                        </span>
+                        <div className="flex flex-col justify-center items-center h-56">
+                            <span>
+                                <img className="custom-height" src={card.img} alt="" height="100px" />
+                            </span>
+
+                            <span className={`${card.isAlive ? 'text-green-700' : 'text-red-700'} capitalize pt-3`}>
+                                {card.isAlive ? 'alive' : `last killing: ${lastKillFormat}`}
+                            </span>
+
+                            <span className={`capitalize`}>
+                                {card.isAlive ? '' : `respawns: ${TimeDifference}`}
+                            </span>
+                            <span className={`capitalize`}>
+                                {card.isAlive ? '' : `killer: ${card.killerName}`}
+                            </span>
+                        </div>
+
+
 
                         <button onClick={() => {
-                            handleMvpUpdate(card.id)
                             setShowModal(true)
+
+                            // TODO
+                            //remove the handle function from this button
+                            handleMvpUpdate(card.id)
                         }} className="bg-red-700 w-full text-white py-1 capitalize">kill</button>
                         <button className="bg-[#A27B5C] w-full text-white py-1 capitalize">edit</button>
                     </div>
                 );
             })}
 
-            <KillerNameModal show={showModal} setShow={setShowModal}></KillerNameModal>
+            <KillerNameModal
+            //TODO 
+            //pass all the functions to the modal
+                show={showModal}
+                setShow={setShowModal}
+                setKillerName={setNewKillerName}
+                setIsModalSubmitted={setIsModalSubmitted}
+                handleMvpUpdate={handleMvpUpdate}
+            />
+
         </div>
     );
 

@@ -13,6 +13,6 @@ model Mvp {
   lastKillTime DateTime @default(now())
   respawnTime  Int @default(9000000)
   isAlive      Boolean  @default(true)
-  killerName   String?
+  killerName   String? @default("")
   img          String?
 }
