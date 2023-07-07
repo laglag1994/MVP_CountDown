@@ -1,20 +1,106 @@
 import Modal from "./Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from 'react-query';
+import { MvpCard } from "./MVPcard";
+
+
+
 
 interface AddNewKiller {
   show: boolean;
   setShow: (show: boolean) => void;
-  setKillerName: (name: string) => void; // Add this line
-  setIsModalSubmitted: (isSubmitted: boolean) => void;
-  handleMvpUpdate: (id: number) => void;
-
+  mvp?: MvpCard
 
 }
 
-const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, setKillerName, setIsModalSubmitted, handleMvpUpdate}) => {
+export const updateMvpInfo = async ({
+  mvpId,
+  lastKillTime,
+  alive,
+  killerName
+}: {
+  mvpId: number,
+  lastKillTime: Date,
+  alive: boolean,
+  killerName: string
+}) => {
+  const updatedData = await fetch("/api/mvp", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: mvpId,
+      isAlive: alive,
+      lastKillTime: lastKillTime,
+      killerName: killerName
+    }),
+  });
+  return updatedData.json();
+
+};
+
+
+
+const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, mvp }) => {
   const [newName, setNewName] = useState("");
 
-  console.log("new killer:", newName);
+  const queryClient = useQueryClient();
+
+  const { isLoading, error, data, mutateAsync } = useMutation(
+    "updateMvp",
+    updateMvpInfo
+  );
+
+
+
+
+  const handleMvpUpdate = async () => {
+
+
+
+    if (!mvp) return
+
+    const currentTime = new Date();
+    const lastKillTime = currentTime; // Set lastKillTime to the current time
+
+    const difference = mvp.respawnTime + lastKillTime.getTime();
+    const TimeDifference = new Date(difference).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+
+    if (mvp.isAlive) {
+      const alive = !mvp.isAlive;
+      const res = await mutateAsync({
+        mvpId: mvp.id,
+        alive: alive,
+        lastKillTime: lastKillTime,
+        killerName: newName, // Use the killerName state variable
+      });
+      queryClient.invalidateQueries(["mvplist"]);
+      console.log(res, "results")
+
+    } else {
+      alert(mvp.name + " is dead")
+    }
+
+    console.log(TimeDifference, "respawn")
+    console.log(lastKillTime, "lastkilltime")
+    console.log(currentTime, "now")
+    setShow(false)
+
+  };
+
+
+
+
+
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>An error has occurred</div>;
 
 
   return (
@@ -33,12 +119,7 @@ const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, setKillerName,
         <button
           className="bg-[#A27B5C]"
           onClick={() => {
-            setKillerName(newName)
-            setShow(false);
-            setIsModalSubmitted(true)
-            //TODO 
-            //pass the id but idk how :( 
-            handleMvpUpdate(id????????????????????????)
+            handleMvpUpdate()
           }}
         >Save</button>
       </div>

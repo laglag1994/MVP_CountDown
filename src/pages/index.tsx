@@ -13,13 +13,13 @@ export default function Home() {
     fetch('/api/mvp').then(res => res.json()
     )
   )
-  
+
   if (isLoading) return 'Loading...'
 
   if (error) return 'An error has occurred: ' + error
 
 
- 
+
 
   return (
 
@@ -33,8 +33,11 @@ export default function Home() {
         <h1 className='text-4xl text-white'>Timer</h1>
       </div>
 
-      <div className='px-20'>
-        <h1 className='text-white py-5'>The MVPs usually respawn in 2 hours and 30 minutes.</h1>
+      <div className='px-32'>
+        <div className='flex px-20 justify-center items-center gap-10 py-10'>
+          <h1 className='text-white py-5 text-lg'>Most MVPs usually respawn in 2 hours and 30 minutes.</h1>
+          <button className='bg-[#A27B5C] text-white py-2 px-6 hover:opacity-70 transition-all duration-500'>Add MVP</button>
+        </div>
         <MVPcard cards={data} />
       </div>
     </div>
