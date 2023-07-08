@@ -43,7 +43,8 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
           lastKillTime: req.body.lastKillTime,
           respawnTime: req.body.respawnTime,
           isAlive: req.body.isAlive,
-          killerName: req.body.killerName
+          killerName: req.body.killerName,
+          img: req.body.img
         }
       })
       res.status(201).json(updateMvp);
@@ -54,10 +55,10 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
 
   } else if (req.method === 'DELETE') {
     try {
-      const { id } = req.query; 
+      const { id } = req.query;
       const deletedMvp = await prisma.mvp.delete({
         where: {
-          id: parseInt(id as string) 
+          id: parseInt(id as string)
         },
       });
       res.status(200).json(deletedMvp);
