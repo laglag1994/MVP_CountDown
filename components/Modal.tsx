@@ -15,7 +15,7 @@ const Modal: React.FC<ModalProps> = ({ children, show, setShow, title, className
 
 	return (
 		<div
-			onClick={(e) => {
+			onClick={(e) => { //@ts-ignore
 				if (boxRef.current && !boxRef.current.contains(e.target))
 					setShow(false)
 			}}

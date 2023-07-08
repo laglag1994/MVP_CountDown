@@ -52,7 +52,20 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
       console.log(error)
     }
 
+  } else if (req.method === 'DELETE') {
+    try {
+      const { id } = req.query; 
+      const deletedMvp = await prisma.mvp.delete({
+        where: {
+          id: parseInt(id as string) 
+        },
+      });
+      res.status(200).json(deletedMvp);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Failed to delete MVP' });
+    }
   } else {
     res.status(405).json({ message: 'Method Not Allowed' });
   }
-}     
+}
