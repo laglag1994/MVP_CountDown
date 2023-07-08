@@ -9,10 +9,10 @@ datasource db {
 
 model Mvp {
   id           Int      @id @default(autoincrement())
-  name         String
+  name         String   @unique
   lastKillTime DateTime @default(now())
-  respawnTime  Int @default(9000000)
+  respawnTime  Int      @default(9000000)
   isAlive      Boolean  @default(true)
-  killerName   String? @default("")
+  killerName   String?  @default("")
   img          String?
 }

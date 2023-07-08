@@ -20,14 +20,17 @@ export default async function mvpHandler(req: NextApiRequest, res: NextApiRespon
 
   } else if (req.method === 'POST') {
     try {
-      const newMvp = await prisma.mvp.create({ data: req.body });
-
-      res.status(201).json(newMvp);
+      const existingMvp = await prisma.mvp.findUnique({ where: { name: req.body.name } });
+      if (existingMvp) {
+        res.status(400).json({ error: 'MVP with the same name already exists' });
+      } else {
+        const newMvp = await prisma.mvp.create({ data: req.body });
+        res.status(201).json(newMvp);
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res.status(500).json({ error: 'Failed to create MVP' });
     }
-
 
 
   } else if (req.method === 'PUT') {

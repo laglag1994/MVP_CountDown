@@ -62,7 +62,7 @@ const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, mvp }) => {
     if (!mvp) return
 
     const currentTime = new Date();
-    const lastKillTime = currentTime; // Set lastKillTime to the current time
+    const lastKillTime = currentTime;
 
     const difference = mvp.respawnTime + lastKillTime.getTime();
     const TimeDifference = new Date(difference).toLocaleTimeString([], {
@@ -72,21 +72,19 @@ const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, mvp }) => {
     });
 
 
-    if (mvp.isAlive) {
-      const alive = !mvp.isAlive;
-      const res = await mutateAsync({
-        mvpId: mvp.id,
-        alive: alive,
-        lastKillTime: lastKillTime,
-        killerName: newName, // Use the killerName state variable
-      });
-      queryClient.invalidateQueries(["mvplist"]);
-      console.log(res, "results")
 
-    } else {
-      alert(mvp.name + " is dead")
-    }
+    const alive = false;
+    const res = await mutateAsync({
+      mvpId: mvp.id,
+      alive: alive,
+      lastKillTime: lastKillTime,
+      killerName: newName,
+    });
+    queryClient.invalidateQueries(["mvplist"]);
 
+
+
+    console.log(res, "results")
     console.log(TimeDifference, "respawn")
     console.log(lastKillTime, "lastkilltime")
     console.log(currentTime, "now")
@@ -106,10 +104,11 @@ const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, mvp }) => {
   return (
     <Modal show={show} setShow={setShow} title="Write your name">
       <div className="flex flex-col gap-5">
+        <span className="text-gray-500 text-sm"> not required</span>
 
         <input
           type="text"
-          className="bg-gray-200"
+          className="bg-gray-200 py-2"
           placeholder="name"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
@@ -117,7 +116,7 @@ const KillerNameModal: React.FC<AddNewKiller> = ({ show, setShow, mvp }) => {
 
 
         <button
-          className="bg-[#A27B5C]"
+          className="bg-[#A27B5C] text-white py-2"
           onClick={() => {
             handleMvpUpdate()
           }}

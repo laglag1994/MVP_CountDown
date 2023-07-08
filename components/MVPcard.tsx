@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from 'react-query';
 import KillerNameModal, { updateMvpInfo } from "./KillerNameModal";
+import defaultImage from "../public/PRM.png"
+
+
 
 
 export type MvpCard = {
@@ -18,10 +21,7 @@ interface MvpProps {
 }
 
 
-
-
 const MVPcard: React.FC<MvpProps> = ({ cards }) => {
-
 
 
 
@@ -52,6 +52,8 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
         }
     });
 
+
+
     return (
         <div className="flex justify-center items-center gap-10 flex-wrap">
             {cards.map((card, index) => {
@@ -76,7 +78,12 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
 
                         <div className="flex flex-col justify-center items-center h-56">
                             <span>
-                                <img className="custom-height" src={card.img} alt="" height="100px" />
+                                <img
+                                    className="custom-height"
+                                    src={card.img ?? "/PRM.png"}
+                                    alt=""
+                                    height="100px"
+                                />
                             </span>
 
                             <span className={`${card.isAlive ? 'text-green-700' : 'text-red-700'} capitalize pt-3`}>
@@ -97,7 +104,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                             setShowModal(true)
                             setSelectedMvp(card)
                         }} className="bg-red-700 w-full text-white py-1 capitalize hover:opacity-70 transition-all duration-500">kill</button>
-                        <button className="bg-[#A27B5C] w-full text-white py-1 capitalize">edit</button>
+
                     </div>
                 );
             })}
