@@ -31,7 +31,7 @@ export default function Home() {
 
     <div className='flex flex-col justify-start items-center gap-10 bg-[#2C3639] min-h-screen pb-20'>
 
-      <div className='md:flex justify-center items-center gap-2 bg-[#3F4E4F] w-full'>
+      <div className='flex   justify-center items-center gap-2 bg-[#3F4E4F] w-full'>
         <img
           className='md:-translate-x-96 '
           src="/PRM.png" alt="" height={80} width={80} />
