@@ -74,7 +74,7 @@ const MVPcard: React.FC<MvpProps> = ({ cards }) => {
                 return (
                     <div key={index} className="flex flex-col justify-center items-center border-2 bg-[#DCD7C9] border-[#A27B5C] w-[200px]">
 
-                        <span className="pt-4">{card.name}</span>
+                        <span className="pt-4 capitalize">{card.name}</span>
 
                         <div className="flex flex-col justify-center items-center h-56">
                             <span>
